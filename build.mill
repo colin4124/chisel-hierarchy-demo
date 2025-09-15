@@ -1,0 +1,8 @@
+package build
+import mill.*, scalalib.*
+
+object demo extends ScalaModule {
+  def scalaVersion = "2.13.16"
+
+  def moduleDir = super.moduleDir / os.up
+}

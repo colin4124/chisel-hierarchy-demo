@@ -3,8 +3,15 @@ package demo
 import scala.collection.mutable.ArrayBuffer
 
 class Module {
-  val name = this.getClass.getName.split("\\.").last
+  val parent: Option[Module] = Driver.currentModule
+
+  Driver.currentModule = Some(this)
+
+  val name  = this.getClass.getName.split("\\.").last
   val ports = ArrayBuffer[Port]()
+  val cmds  = ArrayBuffer[Command]()
+
+  var inst_name = ""
   
   def IO(p: UInt): UInt = {
     ports += Port(p)
@@ -27,8 +34,22 @@ class Module {
 }
 
 object Module {
-  def apply(m: Module): Module = {
-    Driver.ir += m.gen_ir
-    m
+  def apply[T <: Module](m: => T, inst_name: String = ""): T = {
+    val parent = Driver.currentModule
+
+    val module = m
+
+    Driver.currentModule = parent
+
+    parent match {
+      case Some(p) =>
+        p.cmds += DefInstance(module)
+        module.inst_name = inst_name
+      case None =>
+    }
+
+    Driver.ir += module.gen_ir
+
+    module
   }
 }

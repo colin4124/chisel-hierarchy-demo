@@ -48,6 +48,8 @@ object Driver {
       result += s");\n"
       m.cmds foreach { c =>
         c match {
+          case DefVar(id) =>
+            result += s"    wire [${id.width-1}:0] ${id.name};\n"
           case DefInstance(id) =>
             result += dump_inst(id)
         }

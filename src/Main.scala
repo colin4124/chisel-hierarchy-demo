@@ -1,5 +1,5 @@
 package demo
 
 object Main extends App {
-  Driver(Module(new example2.AddTwo), args(0))
+  Driver(Module(new example3.AddTwo), args(0))
 }

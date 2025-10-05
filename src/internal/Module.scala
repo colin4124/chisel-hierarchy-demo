@@ -41,14 +41,21 @@ object Module {
 
     Driver.currentModule = parent
 
-    parent match {
-      case Some(p) =>
-        p.cmds += DefInstance(module)
-        module.inst_name = inst_name
-      case None =>
-    }
+    module.inst_name = inst_name
 
-    Driver.ir += module.gen_ir
+    (parent, module) match {
+      case (Some(p: Module), m: ModuleClone[_]) =>
+        p.cmds += DefInstance(m)
+
+      case (Some(p: Module), m: Module) =>
+        if (inst_name.nonEmpty)
+          p.cmds += DefInstance(m)
+
+        Driver.ir += m.gen_ir
+      case (None, m: Module) =>
+        Driver.ir += m.gen_ir
+      case _ =>
+    }
 
     module
   }

@@ -41,4 +41,10 @@ case class UInt (
       that.connect = Some(this)
     }
   }
+
+  def cloneTypeFull: this.type = {
+    val clone = new UInt(name, width).asInstanceOf[this.type]
+    clone.dir = dir
+    clone
+  }
 }

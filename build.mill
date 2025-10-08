@@ -5,4 +5,22 @@ object demo extends ScalaModule {
   def scalaVersion = "2.13.16"
 
   def moduleDir = super.moduleDir / os.up
+
+  def moduleDeps = Seq(macros)
+
+  def scalacOptions = Seq(
+    "-Ymacro-annotations",
+  )
+}
+
+object macros extends ScalaModule {
+  def scalaVersion = "2.13.16"
+
+  def mvnDeps = Seq(
+    mvn"org.scala-lang:scala-reflect:$scalaVersion",
+  )
+
+  def scalacOptions = Seq(
+    "-Ymacro-annotations",
+  )
 }
